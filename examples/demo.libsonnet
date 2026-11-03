@@ -4,5 +4,12 @@
     name: name,
     replicas: replicas,
     enabled: true,
+    labels: { app: name },
   },
+  extend(service):: service {
+    labels+: { extended: 'true' },
+    replicas: super.replicas + 1,
+  },
+  hiddenConfig+:: { debug: false },
+  visibleConfig+::: { public: true },
 }

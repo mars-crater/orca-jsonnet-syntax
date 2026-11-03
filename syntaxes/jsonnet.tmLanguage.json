@@ -1,164 +1,212 @@
 {
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "Jsonnet",
-    "patterns": [
-        {
-            "include": "#expression"
-        },
-        {
-            "include": "#keywords"
-        }
-    ],
-    "repository": {
-        "comment": {
-            "patterns": [
-                {
-                    "begin": "/\\*",
-                    "end": "\\*/",
-                    "name": "comment.block.jsonnet"
-                },
-                {
-                    "match": "//.*$",
-                    "name": "comment.line.jsonnet"
-                },
-                {
-                    "match": "#.*$",
-                    "name": "comment.block.jsonnet"
-                }
-            ]
-        },
-        "double-quoted-strings": {
-            "begin": "\"",
-            "end": "\"",
-            "name": "string.quoted.double.jsonnet",
-            "patterns": [
-                {
-                    "match": "\\\\([\"\\\\/bfnrt]|(u[0-9a-fA-F]{4}))",
-                    "name": "constant.character.escape.jsonnet"
-                },
-                {
-                    "match": "\\\\[^\"\\\\/bfnrtu]",
-                    "name": "invalid.illegal.jsonnet"
-                }
-            ]
-        },
-        "expression": {
-            "patterns": [
-                {
-                    "include": "#literals"
-                },
-                {
-                    "include": "#comment"
-                },
-                {
-                    "include": "#single-quoted-strings"
-                },
-                {
-                    "include": "#double-quoted-strings"
-                },
-                {
-                    "include": "#block-text-verbatim"
-                },
-                {
-                    "include": "#functions"
-                }
-            ]
-        },
-        "functions": {
-            "patterns": [
-                {
-                    "match": "\\b((?!function)[a-zA-Z_][a-z0-9A-Z_]*)\\s*\\(",
-                    "name": "entity.name.function.jsonnet"
-                }
-            ]
-        },
-        "keywords": {
-            "patterns": [
-                {
-                    "match": "[!:~\\+\\-&\\|\\^=<>\\*\\/%]",
-                    "name": "keyword.operator.jsonnet"
-                },
-                {
-                    "match": "\\$",
-                    "name": "keyword.other.jsonnet"
-                },
-                {
-                    "match": "\\b(self|super|import|importstr|local|tailstrict)\\b",
-                    "name": "keyword.other.jsonnet"
-                },
-                {
-                    "match": "\\b(if|then|else|for|in|error|assert)\\b",
-                    "name": "keyword.control.jsonnet"
-                },
-                {
-                    "match": "\\b(function)\\b",
-                    "name": "storage.type.jsonnet"
-                },
-                {
-                    "match": "[a-zA-Z_][a-z0-9A-Z_]*\\s*(:::|\\+:::)",
-                    "name": "variable.parameter.jsonnet"
-                },
-                {
-                    "match": "[a-zA-Z_][a-z0-9A-Z_]*\\s*(::|\\+::)",
-                    "name": "entity.name.type"
-                },
-                {
-                    "match": "[a-zA-Z_][a-z0-9A-Z_]*\\s*(:|\\+:)",
-                    "name": "variable.parameter.jsonnet"
-                }
-            ]
-        },
-        "literals": {
-            "patterns": [
-                {
-                    "match": "\\b(true|false|null)\\b",
-                    "name": "constant.language.jsonnet"
-                },
-                {
-                    "match": "\\b(\\d+([Ee][+-]?\\d+)?)\\b",
-                    "name": "constant.numeric.jsonnet"
-                },
-                {
-                    "match": "\\b\\d+[.]\\d*([Ee][+-]?\\d+)?\\b",
-                    "name": "constant.numeric.jsonnet"
-                },
-                {
-                    "match": "\\b[.]\\d+([Ee][+-]?\\d+)?\\b",
-                    "name": "constant.numeric.jsonnet"
-                }
-            ]
-        },
-        "single-quoted-strings": {
-            "begin": "'",
-            "end": "'",
-            "name": "string.quoted.double.jsonnet",
-            "patterns": [
-                {
-                    "match": "\\\\(['\\\\/bfnrt]|(u[0-9a-fA-F]{4}))",
-                    "name": "constant.character.escape.jsonnet"
-                },
-                {
-                    "match": "\\\\[^'\\\\/bfnrtu]",
-                    "name": "invalid.illegal.jsonnet"
-                }
-            ]
-        },
-        "block-text-verbatim": {
-            "patterns": [
-                {
-                    "begin": "(?:\\|\\|\\|)(?:\\s*$)",
-                    "end": "^\\s*\\|\\|\\|",
-                    "name": "keyword.other.jsonnet",
-                    "patterns": [
-                        {
-                            "begin": "^([ \t]+)(?! |\t)",
-                            "end": "^(?!\\1|\\s*$)",
-                            "name": "string.unquoted.block.jsonnet"
-                        }
-                    ]
-                }
-            ]
-        }
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Jsonnet",
+  "scopeName": "source.jsonnet",
+  "comment": "Modified by mars-crater for Orca. Based on grafana/vscode-jsonnet commit 3870b0259b75115898e3c809f4e2c71f4acfcaf9, originally heptio/vscode-jsonnet. Apache-2.0; see THIRD_PARTY_NOTICES.md for provenance and changes.",
+  "patterns": [{ "include": "#expression" }],
+  "repository": {
+    "expression": {
+      "patterns": [
+        { "include": "#comment" },
+        { "include": "#strings" },
+        { "include": "#literals" },
+        { "include": "#anonymous-function" },
+        { "include": "#keywords" },
+        { "include": "#builtins" },
+        { "include": "#named-function" },
+        { "include": "#function-call" },
+        { "include": "#object" },
+        { "include": "#array" },
+        { "include": "#parentheses" },
+        { "include": "#operators" },
+        { "include": "#punctuation" },
+        { "match": "\\b[_a-zA-Z][_a-zA-Z0-9]*\\b", "name": "variable.other.jsonnet" }
+      ]
     },
-    "scopeName": "source.jsonnet"
+    "comment": {
+      "patterns": [
+        { "begin": "/\\*", "end": "\\*/", "name": "comment.block.jsonnet" },
+        { "match": "//.*$", "name": "comment.line.double-slash.jsonnet" },
+        { "match": "#.*$", "name": "comment.line.number-sign.jsonnet" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "include": "#verbatim-double" },
+        { "include": "#verbatim-single" },
+        { "include": "#double-quoted-strings" },
+        { "include": "#single-quoted-strings" },
+        { "include": "#block-text-verbatim" }
+      ]
+    },
+    "escapes": {
+      "patterns": [
+        {
+          "match": "\\\\(?:[\"'\\\\/bfnrt]|u[0-9a-fA-F]{4})",
+          "name": "constant.character.escape.jsonnet"
+        },
+        {
+          "match": "\\\\(?:u[0-9a-fA-F]{0,3}|.|$)",
+          "name": "invalid.illegal.escape.jsonnet"
+        }
+      ]
+    },
+    "double-quoted-strings": {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double.jsonnet",
+      "patterns": [{ "include": "#escapes" }]
+    },
+    "single-quoted-strings": {
+      "begin": "'",
+      "end": "'",
+      "name": "string.quoted.single.jsonnet",
+      "patterns": [{ "include": "#escapes" }]
+    },
+    "verbatim-double": {
+      "begin": "@\"",
+      "end": "\"",
+      "name": "string.quoted.double.verbatim.jsonnet",
+      "applyEndPatternLast": true,
+      "patterns": [{ "match": "\"\"", "name": "constant.character.escape.jsonnet" }]
+    },
+    "verbatim-single": {
+      "begin": "@'",
+      "end": "'",
+      "name": "string.quoted.single.verbatim.jsonnet",
+      "applyEndPatternLast": true,
+      "patterns": [{ "match": "''", "name": "constant.character.escape.jsonnet" }]
+    },
+    "block-text-verbatim": {
+      "begin": "\\|\\|\\|-?[ \\t]*\\r?$",
+      "end": "^[ \\t]*\\|\\|\\|",
+      "name": "string.unquoted.block.jsonnet",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.jsonnet" } },
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.jsonnet" } },
+      "patterns": [
+        {
+          "comment": "Remember the first nonblank content line's indentation. A fence at that indentation is string content, not a terminator.",
+          "begin": "^([ \\t]+)(?=\\S)",
+          "end": "^(?!\\1|[ \\t]*\\r?$)",
+          "name": "string.unquoted.block.jsonnet"
+        }
+      ]
+    },
+    "literals": {
+      "patterns": [
+        { "match": "\\b(?:true|false|null)\\b", "name": "constant.language.jsonnet" },
+        {
+          "match": "(?<![\\w.])(?:0|[1-9](?:_?[0-9])*)(?:\\.[0-9](?:_?[0-9])*)?(?:[eE][+-]?[0-9](?:_?[0-9])*)?(?![\\w.])",
+          "name": "constant.numeric.jsonnet"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        { "match": "\\b(?:import|importstr|importbin)\\b", "name": "keyword.control.import.jsonnet" },
+        { "match": "\\b(?:if|then|else|for|in|error|assert)\\b", "name": "keyword.control.jsonnet" },
+        { "match": "\\b(?:local|tailstrict)\\b", "name": "keyword.other.jsonnet" },
+        { "match": "\\bfunction\\b", "name": "storage.type.function.jsonnet" }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        { "match": "\\b(?:self|super)\\b|\\$", "name": "variable.language.jsonnet" },
+        {
+          "match": "\\b(std)([ \\t]*)(\\.)([ \\t]*)([_a-zA-Z][_a-zA-Z0-9]*)(?=[ \\t]*\\()",
+          "captures": {
+            "1": { "name": "support.variable.jsonnet" },
+            "3": { "name": "punctuation.accessor.jsonnet" },
+            "5": { "name": "support.function.jsonnet" }
+          }
+        },
+        { "match": "\\bstd\\b", "name": "support.variable.jsonnet" }
+      ]
+    },
+    "anonymous-function": {
+      "begin": "\\b(function)([ \\t]*)(\\()",
+      "end": "\\)",
+      "name": "meta.function.parameters.jsonnet",
+      "beginCaptures": {
+        "1": { "name": "storage.type.function.jsonnet" },
+        "3": { "name": "punctuation.section.parameters.begin.jsonnet" }
+      },
+      "endCaptures": { "0": { "name": "punctuation.section.parameters.end.jsonnet" } },
+      "patterns": [{ "include": "#parameters" }]
+    },
+    "named-function": {
+      "comment": "Recognize simple local functions and methods. Complex or multiline signatures fall back to ordinary function-call and expression scopes.",
+      "begin": "\\b([_a-zA-Z][_a-zA-Z0-9]*)([ \\t]*)(\\()(?=[^()\\n]*\\)[ \\t]*(?::|=(?!=)))",
+      "end": "\\)",
+      "name": "meta.function.parameters.jsonnet",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.jsonnet" },
+        "3": { "name": "punctuation.section.parameters.begin.jsonnet" }
+      },
+      "endCaptures": { "0": { "name": "punctuation.section.parameters.end.jsonnet" } },
+      "patterns": [{ "include": "#parameters" }]
+    },
+    "parameters": {
+      "patterns": [
+        { "include": "#comment" },
+        {
+          "begin": "=(?!=)",
+          "end": "(?=[,)])",
+          "beginCaptures": { "0": { "name": "keyword.operator.assignment.jsonnet" } },
+          "patterns": [{ "include": "#expression" }]
+        },
+        { "match": "\\b[_a-zA-Z][_a-zA-Z0-9]*\\b", "name": "variable.parameter.jsonnet" },
+        { "include": "#punctuation" }
+      ]
+    },
+    "function-call": {
+      "match": "\\b[_a-zA-Z][_a-zA-Z0-9]*\\b(?=[ \\t]*\\()",
+      "name": "entity.name.function.jsonnet"
+    },
+    "object": {
+      "begin": "\\{",
+      "end": "\\}",
+      "name": "meta.object.jsonnet",
+      "beginCaptures": { "0": { "name": "punctuation.section.braces.begin.jsonnet" } },
+      "endCaptures": { "0": { "name": "punctuation.section.braces.end.jsonnet" } },
+      "patterns": [
+        { "include": "#anonymous-function" },
+        { "include": "#keywords" },
+        {
+          "match": "\\b([_a-zA-Z][_a-zA-Z0-9]*)([ \\t]*)((?:\\+[ \\t]*)?:{1,3})",
+          "captures": {
+            "1": { "name": "variable.other.property.jsonnet" },
+            "3": { "name": "keyword.operator.visibility.jsonnet" }
+          }
+        },
+        { "include": "#expression" }
+      ]
+    },
+    "array": {
+      "begin": "\\[",
+      "end": "\\]",
+      "name": "meta.brackets.jsonnet",
+      "beginCaptures": { "0": { "name": "punctuation.section.brackets.begin.jsonnet" } },
+      "endCaptures": { "0": { "name": "punctuation.section.brackets.end.jsonnet" } },
+      "patterns": [{ "include": "#expression" }]
+    },
+    "parentheses": {
+      "begin": "\\(",
+      "end": "\\)",
+      "name": "meta.group.jsonnet",
+      "beginCaptures": { "0": { "name": "punctuation.section.group.begin.jsonnet" } },
+      "endCaptures": { "0": { "name": "punctuation.section.group.end.jsonnet" } },
+      "patterns": [{ "include": "#expression" }]
+    },
+    "operators": {
+      "patterns": [
+        { "match": "(?:\\+[ \\t]*)?:{1,3}", "name": "keyword.operator.visibility.jsonnet" },
+        { "match": "<<|>>|<=|>=|==|!=|&&|\\|\\||[!~+\\-&|^=<>*/%]", "name": "keyword.operator.jsonnet" }
+      ]
+    },
+    "punctuation": {
+      "match": "[.,;]",
+      "name": "punctuation.separator.jsonnet"
+    }
+  }
 }

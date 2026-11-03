@@ -5,9 +5,17 @@
   "type": "module",
   "description": "Development checks for the data-only Orca Jsonnet syntax plugin",
   "license": "MIT AND Apache-2.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test tests/*.test.mjs",
+    "test:structure": "node --test tests/plugin.test.mjs",
+    "test:tokens": "node --test tests/tokenization.test.mjs",
     "validate:orca": "orca plugin validate ."
+  },
+  "devDependencies": {
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2"
   }
 }

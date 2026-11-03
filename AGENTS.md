@@ -7,7 +7,7 @@
 - Support `.jsonnet` and `.libsonnet`, scope `source.jsonnet`; do not claim generic JSON files.
 - No worker, host API, capabilities, VS Code extension entrypoint or language server is needed.
 - Preserve upstream provenance and Apache-2.0 license for the vendored grammar. Mark modifications if made.
-- `npm test` runs structural scaffold checks without dependencies. These do not test TextMate tokenization or runtime rendering.
+- Run `npm ci --ignore-scripts` then `npm test` for structural and TextMate/Oniguruma token regression checks. `npm run test:structure` alone is dependency-free. Neither suite verifies runtime rendering in Orca.
 - Before release, add token regression tests and verify the syntax in Orca source and diff views, light/dark themes, and after enabling/disabling the plugin.
 - Run `orca plugin validate .` with a newer CLI, or `pnpm validate:plugin <plugin-path>` from a compatible Orca checkout. Schema checks alone do not replace it.
 - Release only after validation: matching manifest version and `vX.Y.Z` tag, public repository, `orca-plugin` topic, licenses and no binary artifacts. Do not tag/publish without approval.

@@ -53,7 +53,12 @@ test('configures comments, brackets and string pairs without runtime code', () =
   assert.deepEqual(config.brackets, [['{', '}'], ['[', ']'], ['(', ')']]);
   for (const quote of ['"', "'"]) {
     assert.ok(config.autoClosingPairs.some((pair) =>
-      pair.open === quote && pair.close === quote && pair.notIn.includes('string')));
+      pair.open === quote && pair.close === quote));
+  }
+  for (const pair of [...config.autoClosingPairs, ...config.surroundingPairs]) {
+    assert.equal(typeof pair.open, 'string');
+    assert.equal(typeof pair.close, 'string');
+    assert.deepEqual(Object.keys(pair).sort(), ['close', 'open']);
   }
   assert.ok(readFileSync(new URL(syntax.configuration, root)).length <= 64 * 1024);
 });
@@ -62,4 +67,5 @@ test('ships project and third-party licenses with upstream provenance', () => {
   assert.match(readFileSync(new URL('LICENSE', root), 'utf8'), /MIT License/);
   assert.match(readFileSync(new URL('licenses/vscode-jsonnet-LICENSE', root), 'utf8'), /Apache License/);
   assert.match(readFileSync(new URL('THIRD_PARTY_NOTICES.md', root), 'utf8'), /3870b0259b75115898e3c809f4e2c71f4acfcaf9/);
+  assert.match(grammar.comment, /Modified by mars-crater/);
 });
