@@ -1,0 +1,13 @@
+{
+  "name": "orca-jsonnet-syntax",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Development checks for the data-only Orca Jsonnet syntax plugin",
+  "license": "MIT AND Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "validate:orca": "orca plugin validate ."
+  }
+}
