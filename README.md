@@ -4,10 +4,9 @@ Data-only syntax highlighting for `.jsonnet` and `.libsonnet` files in
 [Orca](https://www.onorca.dev/), with comments, bracket matching and auto-closing pairs.
 No worker, language server, runtime dependencies or privileged capabilities.
 
-**Status:** unreleased. Structural and real TextMate/Oniguruma token regression
+**Version 0.1.0:** structural and real TextMate/Oniguruma token regression
 tests pass, as do Orca's official source validator and the Orca 1.4.247 CLI validator.
-Desktop checks have been reported successful except for `importbin` highlighting,
-which remains under investigation. See the verification notes below before release.
+Desktop verification has been reported successful, including `importbin` highlighting.
 Formatting, evaluation, completions and diagnostics are out of scope.
 
 ## Highlighting
@@ -82,21 +81,21 @@ The plugin never evaluates Jsonnet or resolves its imports.
 
 ## Desktop verification before release
 
-User-reported desktop results:
+User-reported desktop results for v0.1.0:
 
-- Source highlighting and text blocks: working, except for `importbin` below.
+- Source highlighting, including `importbin`, and text blocks: passed.
 - Light/dark themes and diff highlighting: passed.
 - Comment toggling and bracket/quote pairing: passed.
 - Disabling/re-enabling changes highlighting: passed.
+- Ordinary `.json` files remain unaffected: passed.
+- Development grammar hot reload: reported working.
+- Plugin card: no errors reported.
 
-**Open issue:** `importbin` was reported unhighlighted even though the inspected
-grammar contains its rule. Its token regression passes and gives it the same scope
-as `import` and `importstr`. The active installed copy and a screenshot of the affected
-line still need checking; the cause is not yet confirmed.
+The earlier report of missing `importbin` highlighting was subsequently confirmed
+working by the user; no grammar change was needed.
 
-Use this checklist for release verification. Ordinary `.json` behavior, development
-grammar hot reload and a clean plugin error card have not yet been confirmed.
-Automated token tests do not replace these checks:
+Repeat this checklist for future releases. Automated token tests do not replace
+these checks:
 
 1. Load the development folder with `orca plugin dev watch .` and open both demo files
    in Source. Check strings, comments, numbers, imports, fields and functions.
@@ -116,7 +115,7 @@ Automated token tests do not replace these checks:
 The public repository has the `orca-plugin` topic. Once validation and runtime
 checks pass, merge the work to `main`, update `version` in `orca-plugin.json`
 and `package.json` (including `package-lock.json`), and, with maintainer approval,
-push a matching `vX.Y.Z` tag. **This plugin has not been released.**
+push a matching `vX.Y.Z` tag. The initial release tag is **`v0.1.0`**.
 Keep `node_modules`, generated output and binary artifacts out of the committed
 release tree. Tagging triggers community directory discovery,
 usually within an hour; untagged branch pushes do not publish a plugin release.
