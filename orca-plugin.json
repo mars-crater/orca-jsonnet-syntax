@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stablyai/orca/main/docs/schemas/plugins/orca-plugin.v2.schema.json",
+  "manifestVersion": 2,
+  "execution": "data",
+  "id": "jsonnet-syntax",
+  "name": "Jsonnet Syntax",
+  "version": "0.1.0",
+  "description": "Syntax highlighting, comment toggling and bracket matching for Jsonnet and Libsonnet files.",
+  "author": { "name": "mars-crater", "url": "https://github.com/mars-crater" },
+  "repository": "https://github.com/mars-crater/orca-jsonnet-syntax",
+  "license": "MIT AND Apache-2.0",
+  "engines": { "orca": ">=1.4.246" },
+  "contributes": {
+    "syntaxes": [
+      {
+        "id": "jsonnet",
+        "title": "Jsonnet",
+        "scopeName": "source.jsonnet",
+        "path": "syntaxes/jsonnet.tmLanguage.json",
+        "configuration": "syntaxes/language-configuration.json",
+        "extensions": [".jsonnet", ".libsonnet"]
+      }
+    ]
+  }
+}

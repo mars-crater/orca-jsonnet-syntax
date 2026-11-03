@@ -1,0 +1,52 @@
+name: Check plugin
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+
+  validate-orca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: plugin
+      - uses: actions/checkout@v4
+        with:
+          repository: stablyai/orca
+          ref: 572fbc8a2a0e84ba5471cc75a16cabb266af220b
+          path: orca
+          sparse-checkout: |
+            config/scripts
+            src/shared
+            src/main/plugins
+            src/packages/process-host
+            src/renderer/src/i18n/locales
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Run the upstream validator unchanged, without installing the desktop app.
+      # Keep these versions aligned with the pinned Orca checkout.
+      - name: Install validator dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/orca-validation-deps" --ignore-scripts --save-exact esbuild@0.28.2 zod@4.6.7 yaml@2.9.1 tsx@4.23.15
+          ln -s "$RUNNER_TEMP/orca-validation-deps/node_modules" orca/node_modules
+          mkdir -p "$RUNNER_TEMP/orca-validation-deps/node_modules/@orca"
+          ln -s "$GITHUB_WORKSPACE/orca/src/packages/process-host" "$RUNNER_TEMP/orca-validation-deps/node_modules/@orca/process-host"
+      - name: Validate manifest and declared artifacts with Orca
+        working-directory: orca
+        run: node --import tsx --conditions=orca-source config/scripts/validate-plugin-files.mjs ../plugin/orca-plugin.json
